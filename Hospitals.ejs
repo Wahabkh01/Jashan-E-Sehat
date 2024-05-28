@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospitals</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+        table {
+            width: 70%;
+            margin: auto;
+            border-collapse: collapse;
+        }
+        td,th {
+            text-align: center;
+            padding: 8px;
+        }
+    
+        td {
+            border-right: 1px solid #f8f8f8;
+            font-size: 12px;
+        }
+    
+        thead th {
+            color: #ffffff;
+            background: #eca657;
+        }
+    
+        thead th:nth-child(odd) {
+            color: #ffffff;
+            background: #e45b1c;
+        }
+    
+        tr:nth-child(even) {
+            background: #F8F8F8;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        h1 {
+            color: dimgray;
+            font-family: Garamond, Baskerville, "Baskerville Old Face", "Hoefler Text", "Times New Roman", serif;
+            padding-left: 42%;
+        }
+    
+        nav ul {
+            background-color: #e45b1c;
+            overflow: hidden;
+            color: white;
+            padding: 0;
+            text-align: center;
+            margin: 0;
+            -webkit-transition: max-height 0.4s;
+            -ms-transition: max-height 0.4s;
+            -moz-transition: max-height 0.4s;
+            -o-transition: max-height 0.4s;
+            transition: max-height 0.4s;
+        }
+    
+        nav ul li {
+            display: inline-block;
+            padding: 20px;
+    
+        }
+    
+        nav ul li:hover {
+            background-color: #f8f8f8;
+            color: dimgray;
+        }
+        .handle {
+            width: 100%;
+            background: #005c48;
+            text-align: left;
+            box-sizing: border-box;
+            padding: 15px 10px;
+            cursor: pointer;
+            color: white;
+            display: none
+        }
+    
+        @media (max-width: 767px) {
+    
+            nav ul {
+                max-height: 0;
+            }
+    
+            .showing {
+                max-height: 20em;
+            }
+    
+            nav ul li {
+                box-sizing: border-box;
+                width: 100%;
+                padding: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <a href="/login/patients">
+                <li>Patients</li>
+            </a>            
+            <a href="/login/medications">
+                <li>Medications</li>
+            </a>
+            <a href="/login/appointments">
+                <li>Appointments</li>
+            </a>
+            <a href="/login/hospitals">
+                <li>Hospitals</li>
+            </a>
+        </ul>
+        
+        <div class="handle">Menu</div>
+    </nav>
+    <h1>List of Hospitals</h1>
+    <table >
+        <thead>
+            <tr>
+                <th>Hospital Code</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Contact Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% hospitals.forEach(hospital => { %>
+                <tr>
+                    <td><%= hospital.HospitalCode %></td>
+                    <td><%= hospital.Name %></td>
+                    <td><%= hospital.Address %></td>
+                    <td><%= hospital.ContactInfo %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor's Panel</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
+    
+    .panel {
+        width: 200px;
+        float: left;
+        padding: 20px;
+        background: #f9f9f9;
+        border-right: 1px solid #ccc;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    
+    .panel h3 {
+        margin-top: 0;
+        font-size: 18px;
+        color: #333;
+    }
+    
+    .panel p {
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .table-container {
+        margin-left: 220px;
+        padding: 20px;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+    }
+    
+    table th {
+        background-color: #f9f9f9;
+        color: #333;
+    }
+    
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+    
+    .table-header input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .table-header button {
+        padding: 8px;
+        border: none;
+        background-color: #EE670D; /* Use the specified color */
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+    }
+    
+    .table-header button:hover {
+        background-color: #d65c0c; /* Darken the color on hover */
+    }
+    
+    .panel {
+        /* Other styles remain the same */
+        background: #f9f9f9;
+        border-right: 1px solid #ccc;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    
+    .panel h3 {
+        /* Other styles remain the same */
+        color: #333;
+    }
+    
+    
+    .popup {
+        display: none;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 1000px;
+        max-height: 1000vh; /* Maximum height of the popup */
+        overflow-y: auto; /* Enable vertical scroll if content exceeds height */
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+    
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    
+    
+
+
+</style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h2>Medical History</h2>
+        <div id="medical-history"></div>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    
+
+<div class="panel">
+    
+    <h3><%= Name %></h3>
+    <p><%= Qualifications %></p>
+    <p><%= DocID %></p>
+    
+    
+</div>
+
+<div class="table-container">
+    <div class="table-header">
+        <input type="text" placeholder="Search for patients...">
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Pno</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Gender</th>
+                <th>Contact Info</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example table row, replace with actual patient data -->
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function openPopup(patientId) {
+        console.log('Patient ID:', patientId); // Log the patient ID for debugging
+    
+        const popup = document.getElementById('popup');
+        const overlay = document.getElementById('overlay');
+    
+        // Show the popup and overlay
+        popup.style.display = 'block';
+        overlay.style.display = 'block';
+    
+        // Fetch medical history data based on the patient's ID
+        fetch(`/getMedicalHistory?patientId=${patientId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch medical history');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const medicalHistoryDiv = document.getElementById('medical-history');
+                medicalHistoryDiv.innerHTML = '';
+    
+                // Create a table to display medical history data
+                const table = document.createElement('table');
+                table.classList.add('vertical-table'); // Add a class for styling
+    
+                // Add a header row
+                const headerRow = table.insertRow();
+    
+                // Add left column for headers
+                const headerLeftCell = headerRow.insertCell();
+                headerLeftCell.textContent = 'Field';
+    
+                // Add right column for data
+                const headerRightCell = headerRow.insertCell();
+                headerRightCell.textContent = 'Data';
+    
+                // Populate table with medical history data
+                data.forEach(entry => {
+                    Object.keys(entry).forEach(key => {
+                        const row = table.insertRow();
+                        const leftCell = row.insertCell();
+                        leftCell.textContent = key;
+                        const rightCell = row.insertCell();
+                        rightCell.textContent = entry[key];
+                    });
+                });
+    
+                // Append the table to the medical history div
+                medicalHistoryDiv.appendChild(table);
+    
+                // Adjust popup size based on content
+                const popupContentHeight = table.offsetHeight + 50; // Add extra padding
+                popup.style.height = `${popupContentHeight}px`;
+            })
+            .catch(error => console.error('Error fetching medical history:', error));
+    }
+    
+    function closePopup() {
+        const popup = document.getElementById('popup');
+        const overlay = document.getElementById('overlay');
+    
+        // Hide the popup and overlay
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('.table-header input[type="text"]');
+        const tableRows = document.querySelectorAll('table tbody tr');
+    
+        searchInput.addEventListener('input', function() {
+            const searchText = this.value.trim().toLowerCase();
+    
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowVisible = false;
+    
+                cells.forEach(cell => {
+                    if (cell.textContent.toLowerCase().includes(searchText)) {
+                        rowVisible = true;
+                    }
+                });
+    
+                if (rowVisible) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+    
+
+</script>
+
+</body>
+</html>
